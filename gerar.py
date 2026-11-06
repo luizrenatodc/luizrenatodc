@@ -406,7 +406,7 @@ def stack():
         corpo += f'<g class="ic" style="animation-delay:{.2 + i * .06:.2f}s"><g class="on" style="animation-delay:{-i * .28:.2f}s"><image href="{d}" x="{x:.1f}" y="130" width="{tam}" height="{tam}"/></g></g>'
     grupos = [("Desenvolvimento", ["TypeScript", "JavaScript", "React", "Next.js", "Node.js", "PHP", "Laravel", "Vue.js", "Tailwind CSS"], BABY, 1),
               ("Dados & BI", ["Power BI", "DAX", "SQL", "Python", "PostgreSQL", "Prisma", "Excel avançado", "VBA", "Analytics"], LILAC, -1),
-              ("IA & Automação", ["Agentes de IA", "LLMs (Claude, GPT)", "WhatsApp Business API", "Automação de processos", "Integrações e APIs", "Instagram/Meta API"], MINT, 1),
+              ("IA & Automação", ["Agentes de IA", "LLMs", "WhatsApp Business API", "Automação de processos", "Integrações e APIs", "Instagram/Meta API"], MINT, 1),
               ("Low-code & ERP", ["AppSheet", "Power Apps", "TOTVS", "Datasul", "Fluig", "PIMS"], AMBER, -1)]
     css = ""
     for g, (nome, itens, cor, sent) in enumerate(grupos):
