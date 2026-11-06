@@ -385,7 +385,7 @@ def projeto(nome, titulo, categoria, texto, telas, cor):
 
 
 def titulo_projetos():
-    painel(1000, 136, "04 · Projetos", ["Projetos que eu desenhei e construí."], "", "", "", ("projetos", "Projetos que eu desenhei e construí"))
+    painel(1000, 136, "04 · Projetos", ["Coisas que eu construí."], "", "", "", ("projetos", "Coisas que eu construí"))
 
 
 # ---------- 6. stack ----------
