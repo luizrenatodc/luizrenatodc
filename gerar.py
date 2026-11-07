@@ -385,7 +385,7 @@ def projeto(nome, titulo, categoria, texto, telas, cor):
 
 
 def titulo_projetos():
-    painel(1000, 136, "04 · Projetos", ["Coisas que eu construí."], "", "", "", ("projetos", "Coisas que eu construí"))
+    painel(1000, 136, "01 · Projetos", ["Coisas que eu construí."], "", "", "", ("projetos", "Coisas que eu construí"))
 
 
 # ---------- 6. stack ----------
@@ -424,10 +424,29 @@ def stack():
     css += f"""@keyframes pop{{from{{opacity:0;transform:scale(.4)}}to{{opacity:1;transform:none}}}}
     @keyframes onda{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-7px)}}}}
     .ic{{transform-box:fill-box;transform-origin:center;animation:pop .7s {EASE} both}}.on{{animation:onda 4.2s ease-in-out infinite}}"""
-    painel(W, H, "05 · Stack", ["Ferramentas do dia a dia."], corpo, css, defs, ("stack", "TypeScript, React, Next.js, Node.js, PHP, Laravel, Vue, Tailwind, Python, PostgreSQL, Prisma, Vercel, Git, Power BI, SQL, agentes de IA e automação"), forca=.25)
+    painel(W, H, "02 · Stack", ["Ferramentas do dia a dia."], corpo, css, defs, ("stack", "TypeScript, React, Next.js, Node.js, PHP, Laravel, Vue, Tailwind, Python, PostgreSQL, Prisma, Vercel, Git, Power BI, SQL, agentes de IA e automação"), forca=.25)
 
 
-# ---------- 7. commits ----------
+# Trecho que substitui commits() no gerar.py: o calendário vira um jogo, o Homem-Aranha socando os quadradinhos.
+# ---------- 7. commits (jogo) ----------
+def aranha():
+    RED, BLU, INKS = "#d8262f", "#1f3fae", "#0a0a14"
+    def perna(cls):
+        return f'<g transform="translate(0 7)"><g class="{cls}"><rect x="-3" y="0" width="6.5" height="15" rx="3.2" fill="{BLU}"/><rect x="-3.4" y="10.5" width="7.3" height="5.5" rx="2.6" fill="{RED}"/></g></g>'
+    return f"""<g class="hbob">{perna("legb")}
+    <g transform="translate(-1 -6)"><g class="armb"><rect x="-2.5" y="-2.5" width="12" height="5" rx="2.5" fill="#a81a22"/></g></g>
+    {perna("legf")}
+    <path d="M-8 -9Q0 -12 8 -9L6.5 8Q0 10 -6.5 8Z" fill="{RED}"/>
+    <path d="M-7 3Q0 5 7 3L6.5 8Q0 10 -6.5 8Z" fill="{BLU}"/>
+    <path d="M0 -10V8M-6.5 -4.5H6.5M-5.5 1H5.5" stroke="{INKS}" stroke-width=".5" opacity=".5" fill="none"/>
+    <ellipse cx="0" cy="-3.5" rx="1.5" ry="2.3" fill="{INKS}"/>
+    <circle cx="1.5" cy="-16" r="8" fill="{RED}"/>
+    <path d="M1.5 -24V-8M-6 -16H9.5M-4 -21.5Q1.5 -18 7 -21.5M-4 -10.5Q1.5 -14.5 7 -10.5" stroke="{INKS}" stroke-width=".55" fill="none" opacity=".55"/>
+    <path d="M-1.6 -18.8Q2.4 -19.4 2.8 -16.6Q-.6 -16 -2.2 -17Z" fill="#fff" stroke="{INKS}" stroke-width=".8"/>
+    <path d="M3.6 -18.8Q8.6 -19.6 9.6 -15.8Q5.8 -15 3.4 -16.4Z" fill="#fff" stroke="{INKS}" stroke-width=".9"/>
+    <g transform="translate(1 -6)"><g class="armf"><rect x="-1" y="-2.6" width="14" height="5.2" rx="2.6" fill="{RED}"/><circle cx="14" cy="0" r="4.2" fill="{RED}" stroke="{INKS}" stroke-width=".7"/><circle cx="3" cy="0" r="1.2" fill="#fff" opacity=".85"/></g></g></g>"""
+
+
 def commits():
     W, H = 1000, 400
     tz = dt.timedelta(hours=-3)
@@ -442,56 +461,92 @@ def commits():
     ini -= dt.timedelta(days=(ini.weekday() + 1) % 7)
     fim = dt.date(2026, 11, 6)
     c, g = 13.4, 3
-    x0, y0 = 40, 176
-    corpo = ""
+    p = c + g
+    x0, y0 = 40, 190
+    # tempos do jogo (s): 7 corridas de 3 s, 0,4 s para descer de linha, pausa final com os quadrados voltando
+    T0, DUR, DESCE = 1.0, 3.0, .4
+    CICLO = T0 + 7 * (DUR + DESCE) + 1.8
+    semanas = 0
     d = ini
-    semana = 0
+    while d <= fim:
+        semanas += 1
+        d += dt.timedelta(days=7)
+    gw = semanas * p
+    xa, xb = x0 - 26, x0 + gw + 6
+    vel = (xb - xa) / DUR
+    corpo, kf = "", ""
     meses = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV"]
     visto = set()
+    d, semana, n_q = ini, 0, 0
     while d <= fim:
         for dia in range(7):
             q = d + dt.timedelta(days=dia)
             if q > fim or q.year != 2026:
                 continue
             n = cont.get(q, 0)
-            x, y = x0 + semana * (c + g), y0 + dia * (c + g)
+            x, y = x0 + semana * p, y0 + dia * p
             if q.day <= 7 and q.month not in visto and dia == 0:
                 visto.add(q.month)
                 corpo += T(meses[q.month - 1], MONO, 10.5, x, y0 - 10, FOG, ls=1)
             nivel = 0 if n == 0 else 1 if n <= 2 else 2 if n <= 6 else 3 if n <= 14 else 4
             cor = ["#1a2131", "#2b4a66", "#4f86b3", "#7fb8e6", BABY][nivel]
+            xs = x + c / 2
+            s = T0 + dia * (DUR + DESCE)
+            th = s + ((xs - 22 - xa) / vel if dia % 2 == 0 else (xb - 22 - xs) / vel)
+            volta = CICLO - 1.5 + semana * .02
+            pc = lambda t: f"{t / CICLO * 100:.3f}"
+            kf += f"@keyframes k{n_q}{{0%,{pc(th - .04)}%{{opacity:1;transform:none;fill:{cor}}}{pc(th)}%{{opacity:1;transform:scale(1.7);fill:#fff}}{pc(th + .3)}%,{pc(volta)}%{{opacity:0;transform:scale(.2);fill:{cor}}}{pc(volta + .35)}%,100%{{opacity:1;transform:none;fill:{cor}}}}}"
             atraso = .2 + semana * .035 + dia * .012
-            corpo += f'<rect class="q" x="{x:.1f}" y="{y:.1f}" width="{c}" height="{c}" rx="3" fill="{cor}" style="animation-delay:{atraso:.2f}s"/>'
-            if nivel >= 3:
-                corpo += f'<rect class="b" x="{x:.1f}" y="{y:.1f}" width="{c}" height="{c}" rx="3" fill="#fff" style="animation-delay:{2.5 + semana * .09:.2f}s"/>'
+            corpo += f'<g class="q" style="animation-delay:{atraso:.2f}s"><rect class="h" x="{x:.1f}" y="{y:.1f}" width="{c}" height="{c}" rx="3" fill="{cor}" style="animation-name:k{n_q}"/></g>'
+            n_q += 1
         d += dt.timedelta(days=7)
         semana += 1
-    largura_g = semana * (c + g)
-    # varredura de luz em cima do calendário
-    corpo += f'<rect class="sc" x="{x0}" y="{y0 - 4}" width="44" height="{7 * (c + g) + 6}" fill="url(#sv)"/>'
+    # trajeto do herói e giro de lado a cada linha
+    pos, giro = [], []
+    for r in range(7):
+        s = T0 + r * (DUR + DESCE)
+        yc = y0 + r * p + c / 2 + 1
+        a, b = (xa, xb) if r % 2 == 0 else (xb, xa)
+        pos += [(s, a, yc), (s + DUR, b, yc)]
+        if r < 6:
+            giro += [(s + DUR + DESCE / 2 - .01, 1 if r % 2 == 0 else -1), (s + DUR + DESCE / 2, -1 if r % 2 == 0 else 1)]
+    pc = lambda t: f"{t / CICLO * 100:.3f}"
+    fim_t = pos[-1][0]
+    hero = f"0%{{transform:translate({xa}px,{pos[0][2]:.1f}px);opacity:0}}{pc(.5)}%{{opacity:1}}"
+    for t, x, y in pos:
+        hero += f"{pc(t)}%{{transform:translate({x:.1f}px,{y:.1f}px);opacity:1}}"
+    hero += f"{pc(fim_t + .4)}%{{transform:translate({pos[-1][1]:.1f}px,{pos[-1][2]:.1f}px);opacity:0}}100%{{transform:translate({xa}px,{pos[0][2]:.1f}px);opacity:0}}"
+    flip = "0%{transform:scale(1,1)}" + "".join(f"{pc(t)}%{{transform:scale({v},1)}}" for t, v in giro) + "100%{transform:scale(1,1)}"
+    corpo += f'<g class="hero"><g class="hf">{aranha()}</g></g>'
     # legenda
-    corpo += T("menos", INTER, 11.5, x0, y0 + 7 * (c + g) + 26, FOG)
+    yl = y0 + 7 * p + 26
+    corpo += T("menos", INTER, 11.5, x0, yl + 0, FOG)
     for i, cor in enumerate(["#1a2131", "#2b4a66", "#4f86b3", "#7fb8e6", BABY]):
-        corpo += f'<rect x="{x0 + 44 + i * 17}" y="{y0 + 7 * (c + g) + 15}" width="13" height="13" rx="3" fill="{cor}"/>'
-    corpo += T("mais", INTER, 11.5, x0 + 44 + 5 * 17 + 4, y0 + 7 * (c + g) + 26, FOG)
-    corpo += T("Commits reais em repositórios privados, de jan a nov/2026.", INTER, 12, x0 + largura_g - 3, y0 + 7 * (c + g) + 26, FOG, "end")
-    # números à direita
+        corpo += f'<rect x="{x0 + 44 + i * 17}" y="{yl - 11}" width="13" height="13" rx="3" fill="{cor}"/>'
+    corpo += T("mais", INTER, 11.5, x0 + 44 + 5 * 17 + 4, yl, FOG)
+    corpo += T("Commits reais em repositórios privados, de jan a nov/2026. O Aranha não perdoa nenhum.", INTER, 12, x0 + gw - 3, yl, FOG, "end")
     dias_ativos = len(cont)
     melhor = max(cont.values())
     mes_top = collections.Counter(q.month for q in datas).most_common(1)[0]
-    sx = 800
-    stats = [(str(total), "commits em 2026", BABY), (str(dias_ativos), "dias com commit", LILAC), (str(melhor), "commits no melhor dia", AMBER)]
+    sx = 842
+    stats = [(str(total), "commits em 2026", BABY), (str(dias_ativos), "dias com commit", LILAC), (str(melhor), "no melhor dia", AMBER)]
     for i, (v, t, cor) in enumerate(stats):
         y = 150 + i * 72
         corpo += f'<g class="cd" style="animation-delay:{.4 + i * .15}s">{T(v, SYNE, 36, sx, y + 30, cor)}{T(t, INTER, 12.5, sx, y + 50, "#aab4c8")}</g>'
-    defs = f'<linearGradient id="sv" x1="0" x2="1"><stop offset="0" stop-color="{BABY}" stop-opacity="0"/><stop offset=".85" stop-color="{BABY}" stop-opacity=".28"/><stop offset="1" stop-color="#fff" stop-opacity=".6"/></linearGradient>'
     css = f"""@keyframes q{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}
-    @keyframes bl{{0%{{opacity:0}}3%{{opacity:.75}}12%,100%{{opacity:0}}}}
-    @keyframes sc{{0%{{transform:translateX(-50px);opacity:0}}5%{{opacity:1}}95%{{opacity:1}}100%{{transform:translateX({largura_g:.0f}px);opacity:0}}}}
+    @keyframes hero{{{hero}}}@keyframes hf{{{flip}}}
+    @keyframes bob{{to{{transform:translateY(-1.6px)}}}}@keyframes leg{{from{{transform:rotate(-38deg)}}to{{transform:rotate(38deg)}}}}
+    @keyframes punch{{0%,100%{{transform:translateX(-2px) rotate(-6deg)}}40%{{transform:translateX(7px) rotate(0)}}}}
+    @keyframes armb{{from{{transform:rotate(-30deg)}}to{{transform:rotate(30deg)}}}}
+    {kf}
     .q{{transform-box:fill-box;transform-origin:center;animation:q .5s {EASE} both}}
-    .b{{opacity:0;animation:bl 8s linear infinite}}.sc{{opacity:0;animation:sc 8s linear 2.5s infinite}}
-    .cd{{animation:sobe .9s {EASE} both}}"""
-    painel(W, H, "06 · Ritmo", [f"{total} commits em 2026."], corpo, css, defs, ("commits", f"{total} commits em 2026 em {dias_ativos} dias"), forca=.22)
+    .h{{transform-box:fill-box;transform-origin:center;animation-duration:{CICLO:.2f}s;animation-iteration-count:infinite;animation-timing-function:linear}}
+    .hero{{opacity:0;animation:hero {CICLO:.2f}s linear infinite}}.hf{{animation:hf {CICLO:.2f}s linear infinite}}
+    .hbob{{animation:bob .2s ease-in-out infinite alternate}}.legf{{animation:leg .2s ease-in-out infinite alternate}}.legb{{animation:leg .2s ease-in-out -.2s infinite alternate}}
+    .armf{{animation:punch .32s ease-in-out infinite}}.armb{{animation:armb .2s ease-in-out infinite alternate}}
+    .cd{{animation:sobe .9s {EASE} both}}
+    @media (prefers-reduced-motion:reduce){{.hero{{display:none}}.h{{animation:none}}}}"""
+    painel(W, H, "03 · Ritmo", [f"{total} commits em 2026."], corpo, css, "", ("commits", f"Calendário de commits de 2026 com {total} commits em {dias_ativos} dias; o Homem-Aranha corre linha por linha socando cada quadradinho, que depois voltam"), forca=.22)
     print("commits", total, "dias", dias_ativos, "melhor", melhor, "mes", mes_top)
     return total
 
@@ -532,9 +587,6 @@ if __name__ == "__main__":
     n_repos = sum(1 for l in (RAIZ / "dados/linguagens.jsonl").read_text().splitlines() if l.strip())
     capa()
     total = commits()
-    sobre(n_repos, total)
-    trajetoria()
-    servicos()
     titulo_projetos()
     projeto("proj-agentes", "Agentes de IA", "IA · WhatsApp", "Atendem, fecham pedido, agendam e chamam o humano.", ["galeria-lp/ag-dashboard.webp", "galeria-lp/ag-inbox.webp", "galeria-lp/ag-fluxo.webp"], MINT)
     projeto("proj-sistemas", "Sistemas sob medida", "CRM · Agenda · BI", "O processo da empresa vira sistema, do jeito do time.", ["galeria-lp/ad-dashboard-escuro.webp", "portfolio/crm-desktop.webp", "portfolio/admin-desktop.webp"], BABY)

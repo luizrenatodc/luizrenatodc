@@ -15,18 +15,6 @@ Uno a precisão de quem vive de BI e Analytics com a entrega de quem desenvolve 
 
 <br/>
 
-<img src="./assets/sobre.svg" width="100%" alt="9 anos construindo sistemas, 32 repositórios, 496 commits em 2026 e 16 projetos no portfólio" />
-
-<br/>
-
-<img src="./assets/trajetoria.svg" width="100%" alt="Experiência: Carvalho Labs (nov/2017 até hoje), Colombo Agroindústria (mar/2023 até hoje), Pixter (jan/2022 a fev/2023) e Nubank (ago/2019 a jan/2021). Formação: pós em Ciência de Dados e IA pela Uninter e Ciência da Computação pela UNIP" />
-
-<br/>
-
-<img src="./assets/servicos.svg" width="100%" alt="O que eu faço: sistemas sob medida, dados e BI, agentes de IA, automação, sites e apps, ensino" />
-
-<br/>
-
 <a href="https://www.luizrenato.dev/#projetos"><img src="./assets/projetos.svg" width="100%" alt="Coisas que eu construí" /></a>
 
 <br/>
@@ -38,15 +26,11 @@ Uno a precisão de quem vive de BI e Analytics com a entrega de quem desenvolve 
 
 <br/>
 
-<a href="https://www.luizrenato.dev"><img src="./assets/site.gif" width="100%" alt="Passeio pelo site luizrenato.dev" /></a>
-
-<br/>
-
 <img src="./assets/stack.svg" width="100%" alt="Stack: TypeScript, React, Next.js, Node.js, PHP, Laravel, Vue, Tailwind, Python, PostgreSQL, Prisma, Vercel, Git, Power BI, SQL, agentes de IA e automação" />
 
 <br/>
 
-<img src="./assets/commits.svg" width="100%" alt="Calendário de commits de 2026: 496 commits em 83 dias" />
+<img src="./assets/commits.svg" width="100%" alt="Calendário de commits de 2026, com o Homem-Aranha socando cada quadradinho" />
 
 <br/>
 
