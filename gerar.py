@@ -361,7 +361,7 @@ def projeto(nome, titulo, categoria, texto, telas, cor):
     pc = 100 / n
     imgs = ""
     for i, t in enumerate(telas):
-        im = Image.open(SITE / t).convert("RGB")
+        im = Image.open(t if Path(t).is_absolute() else SITE / t).convert("RGB")
         im = im.resize((820, int(820 * im.height / im.width)), Image.LANCZOS)
         # cada tela inteira, sem cortar
         h = iw * im.height / im.width
@@ -592,6 +592,8 @@ if __name__ == "__main__":
     projeto("proj-sistemas", "Sistemas sob medida", "CRM · Agenda · BI", "O processo da empresa vira sistema, do jeito do time.", ["galeria-lp/ad-dashboard-escuro.webp", "portfolio/crm-desktop.webp", "portfolio/admin-desktop.webp"], BABY)
     projeto("proj-sites", "Sites e e-commerce", "Next.js · SEO", "Rápidos, com identidade própria para cada negócio.", ["galeria-lp/site-restaurante.webp", "galeria-lp/site-barbearia.webp", "galeria-lp/site-odonto.webp"], AMBER)
     projeto("proj-dados", "Automação e dados", "Fluxos · Relatórios", "Retrabalho rodando sozinho e indicador para decidir.", ["portfolio/fluxo-desktop.webp", "galeria-lp/ag-relatorio.webp", "galeria-lp/ad-salao-financeiro.webp"], LILAC)
+    projeto("proj-atendimento", "Agente para qualquer empresa", "IA · Admin", "Atende, aprende o negócio e passa para o humano.", [str(RAIZ.parent / "portfolio" / "agente-atendimento" / "docs" / "admin-conversas.png"), str(RAIZ.parent / "portfolio" / "agente-atendimento" / "docs" / "admin-base.png"), str(RAIZ.parent / "portfolio" / "agente-atendimento" / "docs" / "admin-metricas.png")], MINT)
+    projeto("proj-padaria", "Kit Café da padaria", "Site · Pedido", "O cliente monta o kit e o pedido sai pelo WhatsApp.", [str(RAIZ.parent / "portfolio" / "padaria-kit-cafe" / "docs" / "hero.png"), str(RAIZ.parent / "portfolio" / "padaria-kit-cafe" / "docs" / "montagem.png"), str(RAIZ.parent / "portfolio" / "padaria-kit-cafe" / "docs" / "resumo.png")], AMBER)
     stack()
     contato()
     botao("site", "luizrenato.dev", BABY, True)

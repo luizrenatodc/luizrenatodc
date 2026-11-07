@@ -23,6 +23,8 @@ Uno a precisão de quem vive de BI e Analytics com a entrega de quem desenvolve 
 <a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-sistemas.svg" width="49%" alt="Sistemas sob medida" /></a>
 <a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-sites.svg" width="49%" alt="Sites e e-commerce" /></a>
 <a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-dados.svg" width="49%" alt="Automação e dados" /></a>
+<a href="https://github.com/luizrenatodc/agente-atendimento"><img src="./assets/proj-atendimento.svg" width="49%" alt="Agente de atendimento para qualquer empresa, com painel de admin" /></a>
+<a href="https://luizrenatodc.github.io/padaria-kit-cafe/"><img src="./assets/proj-padaria.svg" width="49%" alt="Site de padaria onde o cliente monta o Kit Café" /></a>
 
 <br/>
 
