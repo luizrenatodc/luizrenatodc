@@ -30,7 +30,7 @@ Uno a precisão de quem vive de BI e Analytics com a entrega de quem desenvolve 
 
 <br/>
 
-<img src="./assets/commits.svg" width="100%" alt="Calendário de commits de 2026, com o Homem-Aranha socando cada quadradinho" />
+<img src="./assets/commits.svg" width="100%" alt="Calendário de commits de 2026, com o Steve do Minecraft minerando cada quadradinho com a picareta" />
 
 <br/>
 

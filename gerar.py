@@ -427,24 +427,50 @@ def stack():
     painel(W, H, "02 · Stack", ["Ferramentas do dia a dia."], corpo, css, defs, ("stack", "TypeScript, React, Next.js, Node.js, PHP, Laravel, Vue, Tailwind, Python, PostgreSQL, Prisma, Vercel, Git, Power BI, SQL, agentes de IA e automação"), forca=.25)
 
 
-# Trecho que substitui commits() no gerar.py: o calendário vira um jogo, o Homem-Aranha socando os quadradinhos.
+# O calendário de commits vira um jogo: o Steve (Minecraft) anda de picareta minerando cada quadradinho.
 # ---------- 7. commits (jogo) ----------
-def aranha():
-    RED, BLU, INKS = "#d8262f", "#1f3fae", "#0a0a14"
-    def perna(cls):
-        return f'<g transform="translate(0 7)"><g class="{cls}"><rect x="-3" y="0" width="6.5" height="15" rx="3.2" fill="{BLU}"/><rect x="-3.4" y="10.5" width="7.3" height="5.5" rx="2.6" fill="{RED}"/></g></g>'
-    return f"""<g class="hbob">{perna("legb")}
-    <g transform="translate(-1 -6)"><g class="armb"><rect x="-2.5" y="-2.5" width="12" height="5" rx="2.5" fill="#a81a22"/></g></g>
-    {perna("legf")}
-    <path d="M-8 -9Q0 -12 8 -9L6.5 8Q0 10 -6.5 8Z" fill="{RED}"/>
-    <path d="M-7 3Q0 5 7 3L6.5 8Q0 10 -6.5 8Z" fill="{BLU}"/>
-    <path d="M0 -10V8M-6.5 -4.5H6.5M-5.5 1H5.5" stroke="{INKS}" stroke-width=".5" opacity=".5" fill="none"/>
-    <ellipse cx="0" cy="-3.5" rx="1.5" ry="2.3" fill="{INKS}"/>
-    <circle cx="1.5" cy="-16" r="8" fill="{RED}"/>
-    <path d="M1.5 -24V-8M-6 -16H9.5M-4 -21.5Q1.5 -18 7 -21.5M-4 -10.5Q1.5 -14.5 7 -10.5" stroke="{INKS}" stroke-width=".55" fill="none" opacity=".55"/>
-    <path d="M-1.6 -18.8Q2.4 -19.4 2.8 -16.6Q-.6 -16 -2.2 -17Z" fill="#fff" stroke="{INKS}" stroke-width=".8"/>
-    <path d="M3.6 -18.8Q8.6 -19.6 9.6 -15.8Q5.8 -15 3.4 -16.4Z" fill="#fff" stroke="{INKS}" stroke-width=".9"/>
-    <g transform="translate(1 -6)"><g class="armf"><rect x="-1" y="-2.6" width="14" height="5.2" rx="2.6" fill="{RED}"/><circle cx="14" cy="0" r="4.2" fill="{RED}" stroke="{INKS}" stroke-width=".7"/><circle cx="3" cy="0" r="1.2" fill="#fff" opacity=".85"/></g></g></g>"""
+def steve():
+    # Steve (Minecraft) de perfil, em pixel art: u = 1 "pixel" do jogo. Anda de picareta de diamante em punho e minera os quadradinhos.
+    u = 1.45
+    SKIN, SKIN2, HAIR = "#c68e6b", "#a8745a", "#4a3220"
+    SHIRT, SHIRT2 = "#2fb2c9", "#1f8fa3"
+    PANTS, PANTS2, SHOE = "#3c4aa0", "#2c3780", "#6b6b72"
+    OUT = "#0a0a14"
+    DIA, DIA2, CAB = "#4fe3d1", "#27a597", "#7a5230"
+
+    def perna(cls, calca):
+        return (f'<g transform="translate(0 {8 * u:.2f})"><g class="{cls}">'
+                f'<rect x="{-2 * u:.2f}" y="0" width="{4 * u:.2f}" height="{12 * u:.2f}" fill="{calca}" stroke="{OUT}" stroke-width=".5"/>'
+                f'<rect x="{-2 * u:.2f}" y="{9 * u:.2f}" width="{4 * u:.2f}" height="{3 * u:.2f}" fill="{SHOE}" stroke="{OUT}" stroke-width=".5"/></g></g>')
+
+    ombro = -6 * u  # altura do ombro
+    # picareta: cabo marrom e cabeça de diamante em arco, na ponta do braço (aponta para +x)
+    picareta = (f'<g transform="translate({8 * u:.2f} 0)">'
+                f'<rect x="0" y="{-1.1:.2f}" width="{12 * u:.2f}" height="2.2" fill="{CAB}" stroke="{OUT}" stroke-width=".4"/>'
+                f'<rect x="{10.5 * u:.2f}" y="{-6.2 * u:.2f}" width="{2.6 * u:.2f}" height="{12.4 * u:.2f}" rx=".6" fill="{DIA}" stroke="{OUT}" stroke-width=".5"/>'
+                f'<rect x="{8.6 * u:.2f}" y="{-6.2 * u:.2f}" width="{2.4 * u:.2f}" height="{2.2 * u:.2f}" fill="{DIA}" stroke="{OUT}" stroke-width=".5"/>'
+                f'<rect x="{8.6 * u:.2f}" y="{4 * u:.2f}" width="{2.4 * u:.2f}" height="{2.2 * u:.2f}" fill="{DIA}" stroke="{OUT}" stroke-width=".5"/>'
+                f'<rect x="{11.6 * u:.2f}" y="{-5.2 * u:.2f}" width="{.9 * u:.2f}" height="{10.4 * u:.2f}" fill="{DIA2}" opacity=".7"/></g>')
+    braco_tras = (f'<g transform="translate(0 {ombro:.2f})"><g class="armb">'
+                  f'<rect x="{-2 * u:.2f}" y="{-2 * u:.2f}" width="{4 * u:.2f}" height="{12 * u:.2f}" fill="{SHIRT2}" stroke="{OUT}" stroke-width=".5"/>'
+                  f'<rect x="{-2 * u:.2f}" y="{7 * u:.2f}" width="{4 * u:.2f}" height="{3 * u:.2f}" fill="{SKIN2}" stroke="{OUT}" stroke-width=".5"/></g></g>')
+    braco_frente = (f'<g transform="translate(0 {ombro:.2f})"><g class="armf">'
+                    f'<rect x="{-2 * u:.2f}" y="{-2 * u:.2f}" width="{9 * u:.2f}" height="{4 * u:.2f}" fill="{SHIRT}" stroke="{OUT}" stroke-width=".5"/>'
+                    f'<rect x="{5.5 * u:.2f}" y="{-2 * u:.2f}" width="{3 * u:.2f}" height="{4 * u:.2f}" fill="{SKIN}" stroke="{OUT}" stroke-width=".5"/>'
+                    f'{picareta}</g></g>')
+    corpo = f'<rect x="{-2 * u:.2f}" y="{-10 * u:.2f}" width="{4 * u:.2f}" height="{18 * u:.2f}" fill="{SHIRT}" stroke="{OUT}" stroke-width=".5"/>'
+    corpo = corpo.replace(f'height="{18 * u:.2f}"', f'height="{18 * u:.2f}"')
+    # cabeça 8x8 de perfil, olhando para +x
+    cab = (f'<g transform="translate(0 {-10 * u:.2f})">'
+           f'<rect x="{-4 * u:.2f}" y="{-8 * u:.2f}" width="{8 * u:.2f}" height="{8 * u:.2f}" fill="{SKIN}" stroke="{OUT}" stroke-width=".6"/>'
+           f'<rect x="{-4 * u:.2f}" y="{-8 * u:.2f}" width="{8 * u:.2f}" height="{2 * u:.2f}" fill="{HAIR}"/>'
+           f'<rect x="{-4 * u:.2f}" y="{-6 * u:.2f}" width="{2.6 * u:.2f}" height="{4.2 * u:.2f}" fill="{HAIR}"/>'
+           f'<rect x="{.6 * u:.2f}" y="{-4.4 * u:.2f}" width="{2.2 * u:.2f}" height="{1.2 * u:.2f}" fill="#fff"/>'
+           f'<rect x="{1.7 * u:.2f}" y="{-4.4 * u:.2f}" width="{1.1 * u:.2f}" height="{1.2 * u:.2f}" fill="#4a3a9a"/>'
+           f'<rect x="{2.4 * u:.2f}" y="{-3 * u:.2f}" width="{1.6 * u:.2f}" height="{1 * u:.2f}" fill="{SKIN2}"/>'
+           f'<rect x="{-.2 * u:.2f}" y="{-1.6 * u:.2f}" width="{4.2 * u:.2f}" height="{1.6 * u:.2f}" fill="#7a5240"/></g>')
+    return (f'<g class="hbob">{perna("legb", PANTS2)}{braco_tras}'
+            f'{corpo}{perna("legf", PANTS)}{cab}{braco_frente}</g>')
 
 
 def commits():
@@ -517,14 +543,14 @@ def commits():
         hero += f"{pc(t)}%{{transform:translate({x:.1f}px,{y:.1f}px);opacity:1}}"
     hero += f"{pc(fim_t + .4)}%{{transform:translate({pos[-1][1]:.1f}px,{pos[-1][2]:.1f}px);opacity:0}}100%{{transform:translate({xa}px,{pos[0][2]:.1f}px);opacity:0}}"
     flip = "0%{transform:scale(1,1)}" + "".join(f"{pc(t)}%{{transform:scale({v},1)}}" for t, v in giro) + "100%{transform:scale(1,1)}"
-    corpo += f'<g class="hero"><g class="hf">{aranha()}</g></g>'
+    corpo += f'<g class="hero"><g class="hf">{steve()}</g></g>'
     # legenda
     yl = y0 + 7 * p + 26
     corpo += T("menos", INTER, 11.5, x0, yl + 0, FOG)
     for i, cor in enumerate(["#1a2131", "#2b4a66", "#4f86b3", "#7fb8e6", BABY]):
         corpo += f'<rect x="{x0 + 44 + i * 17}" y="{yl - 11}" width="13" height="13" rx="3" fill="{cor}"/>'
     corpo += T("mais", INTER, 11.5, x0 + 44 + 5 * 17 + 4, yl, FOG)
-    corpo += T("Commits reais em repositórios privados, de jan a nov/2026. O Aranha não perdoa nenhum.", INTER, 12, x0 + gw - 3, yl, FOG, "end")
+    corpo += T("Commits reais em repositórios privados, de jan a nov/2026. O Steve minera cada um.", INTER, 12, x0 + gw - 3, yl, FOG, "end")
     dias_ativos = len(cont)
     melhor = max(cont.values())
     mes_top = collections.Counter(q.month for q in datas).most_common(1)[0]
@@ -536,17 +562,17 @@ def commits():
     css = f"""@keyframes q{{from{{opacity:0;transform:scale(.2)}}to{{opacity:1;transform:none}}}}
     @keyframes hero{{{hero}}}@keyframes hf{{{flip}}}
     @keyframes bob{{to{{transform:translateY(-1.6px)}}}}@keyframes leg{{from{{transform:rotate(-38deg)}}to{{transform:rotate(38deg)}}}}
-    @keyframes punch{{0%,100%{{transform:translateX(-2px) rotate(-6deg)}}40%{{transform:translateX(7px) rotate(0)}}}}
+    @keyframes punch{{0%,100%{{transform:rotate(-62deg)}}42%{{transform:rotate(26deg)}}}}
     @keyframes armb{{from{{transform:rotate(-30deg)}}to{{transform:rotate(30deg)}}}}
     {kf}
     .q{{transform-box:fill-box;transform-origin:center;animation:q .5s {EASE} both}}
     .h{{transform-box:fill-box;transform-origin:center;animation-duration:{CICLO:.2f}s;animation-iteration-count:infinite;animation-timing-function:linear}}
     .hero{{opacity:0;animation:hero {CICLO:.2f}s linear infinite}}.hf{{animation:hf {CICLO:.2f}s linear infinite}}
     .hbob{{animation:bob .2s ease-in-out infinite alternate}}.legf{{animation:leg .2s ease-in-out infinite alternate}}.legb{{animation:leg .2s ease-in-out -.2s infinite alternate}}
-    .armf{{animation:punch .32s ease-in-out infinite}}.armb{{animation:armb .2s ease-in-out infinite alternate}}
+    .armf{{animation:punch .45s ease-in infinite}}.armb{{animation:armb .2s ease-in-out infinite alternate}}
     .cd{{animation:sobe .9s {EASE} both}}
     @media (prefers-reduced-motion:reduce){{.hero{{display:none}}.h{{animation:none}}}}"""
-    painel(W, H, "03 · Ritmo", [f"{total} commits em 2026."], corpo, css, "", ("commits", f"Calendário de commits de 2026 com {total} commits em {dias_ativos} dias; o Homem-Aranha corre linha por linha socando cada quadradinho, que depois voltam"), forca=.22)
+    painel(W, H, "03 · Ritmo", [f"{total} commits em 2026."], corpo, css, "", ("commits", f"Calendário de commits de 2026 com {total} commits em {dias_ativos} dias; o Steve anda linha por linha minerando cada quadradinho com a picareta, e os blocos depois voltam"), forca=.22)
     print("commits", total, "dias", dias_ativos, "melhor", melhor, "mes", mes_top)
     return total
 
