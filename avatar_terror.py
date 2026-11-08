@@ -1,4 +1,4 @@
-# Avatar de terror do perfil: o personagem escuro dos vídeos (óculos redondos, barba cheia, cabelo com volume, suéter),
+# Avatar de terror (azul bebê) do perfil: o personagem escuro dos vídeos (óculos redondos, barba cheia, cabelo com volume, suéter),
 # com olhos vermelhos brilhando, lentes rachadas, sorriso largo com dentes e névoa. Saída: assets/avatar-terror.svg (1024x1024).
 import random
 from pathlib import Path
@@ -32,7 +32,7 @@ def brasas():
         x, y = random.uniform(40, 984), random.uniform(40, 984)
         r = random.choice([1.2, 1.6, 2.2, 3])
         o = random.uniform(.25, .8)
-        out += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="#ff4a3a" opacity="{o:.2f}"/>'
+        out += f'<circle cx="{x:.0f}" cy="{y:.0f}" r="{r}" fill="#a8d8ff" opacity="{o:.2f}"/>'
     return out
 
 
@@ -51,20 +51,20 @@ CAB, CABL = "#040307", "#14101c"
 svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S} {S}" width="{S}" height="{S}">
 <defs>
   <radialGradient id="halo" cx="50%" cy="42%" r="55%">
-    <stop offset="0" stop-color="#b3121f" stop-opacity=".75"/><stop offset=".45" stop-color="#5a0a14" stop-opacity=".45"/><stop offset="1" stop-color="#05030a" stop-opacity="0"/>
+    <stop offset="0" stop-color="#3f8fd6" stop-opacity=".75"/><stop offset=".45" stop-color="#1b4673" stop-opacity=".45"/><stop offset="1" stop-color="#04060d" stop-opacity="0"/>
   </radialGradient>
   <radialGradient id="vinheta" cx="50%" cy="46%" r="75%">
     <stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".92"/>
   </radialGradient>
   <radialGradient id="olho" cx="50%" cy="50%" r="50%">
-    <stop offset="0" stop-color="#fff3e8"/><stop offset=".25" stop-color="#ff5a3c"/><stop offset=".7" stop-color="#d4141f"/><stop offset="1" stop-color="#4a0408"/>
+    <stop offset="0" stop-color="#f4fbff"/><stop offset=".25" stop-color="#a8d8ff"/><stop offset=".7" stop-color="#4aa0e6"/><stop offset="1" stop-color="#0c2744"/>
   </radialGradient>
   <linearGradient id="nevoa" x1="0" y1="0" x2="0" y2="1">
     <stop offset="0" stop-color="#8a8fa8" stop-opacity="0"/><stop offset="1" stop-color="#9aa0b8" stop-opacity=".35"/>
   </linearGradient>
   <filter id="rim" x="-30%" y="-30%" width="160%" height="160%">
-    <feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#ff4a3a" flood-opacity=".9"/>
-    <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#c1121f" flood-opacity=".55"/>
+    <feDropShadow dx="0" dy="0" stdDeviation="2.4" flood-color="#a8d8ff" flood-opacity=".9"/>
+    <feDropShadow dx="0" dy="0" stdDeviation="14" flood-color="#5fb2ff" flood-opacity=".55"/>
   </filter>
   <filter id="brilho" x="-100%" y="-100%" width="300%" height="300%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
   <filter id="borra"><feGaussianBlur stdDeviation="28"/></filter>
@@ -72,13 +72,13 @@ svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S} {S}" width="{
   <filter id="fumaca" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".008 .018" numOctaves="3" seed="9" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="90"/><feGaussianBlur stdDeviation="9"/></filter>
 </defs>
 
-<rect width="{S}" height="{S}" fill="#05030a"/>
+<rect width="{S}" height="{S}" fill="#04060d"/>
 <rect width="{S}" height="{S}" fill="url(#halo)"/>
 <!-- fumaça escura subindo atrás da cabeça -->
 <g filter="url(#fumaca)" opacity=".85">
-  <path d="M250 760 C170 560 270 380 210 170 C300 300 330 430 300 560Z" fill="#12060a"/>
-  <path d="M780 760 C860 560 760 380 820 170 C730 300 700 430 730 560Z" fill="#12060a"/>
-  <path d="M470 330 C430 220 520 120 470 20 C560 110 590 230 540 330Z" fill="#0b0408"/>
+  <path d="M250 760 C170 560 270 380 210 170 C300 300 330 430 300 560Z" fill="#060b16"/>
+  <path d="M780 760 C860 560 760 380 820 170 C730 300 700 430 730 560Z" fill="#060b16"/>
+  <path d="M470 330 C430 220 520 120 470 20 C560 110 590 230 540 330Z" fill="#04070e"/>
 </g>
 {brasas()}
 
@@ -103,8 +103,8 @@ svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S} {S}" width="{
   <!-- nariz -->
   <path d="M202 204 C194 226 194 236 200 240 C207 243 214 240 216 235" fill="none" stroke="#1d1623" stroke-width="5" stroke-linecap="round"/>
   <!-- sorriso largo com dentes -->
-  <path d="M146 270 Q200 {270 + 80} 254 270 Q200 {270 + 24} 146 270Z" fill="#050104"/>
-  <path d="M146 270 Q200 350 254 270" fill="none" stroke="#7a0c14" stroke-width="2" opacity=".8"/>
+  <path d="M146 270 Q200 {270 + 80} 254 270 Q200 {270 + 24} 146 270Z" fill="#02040a"/>
+  <path d="M146 270 Q200 350 254 270" fill="none" stroke="#5fb2ff" stroke-width="2" opacity=".8"/>
   {dentes()}
   <!-- bigode -->
   <path d="M134 252 C156 234 188 236 200 246 C212 236 244 234 266 252 C262 262 254 268 246 266 C228 258 214 258 200 260 C186 258 172 258 154 266 C146 268 138 262 134 252Z" fill="{CAB}"/>
@@ -117,16 +117,16 @@ svg = f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {S} {S}" width="{
   <path d="M132 162 Q160 164 188 184" fill="none" stroke="{CAB}" stroke-width="12" stroke-linecap="round"/>
   <path d="M268 162 Q240 164 212 184" fill="none" stroke="{CAB}" stroke-width="12" stroke-linecap="round"/>
   <!-- óculos redondos de aro grosso, lentes rachadas -->
-  <circle cx="158" cy="194" r="37" fill="rgba(255,50,50,.10)" stroke="#0a0508" stroke-width="9"/>
-  <circle cx="242" cy="194" r="37" fill="rgba(255,50,50,.10)" stroke="#0a0508" stroke-width="9"/>
-  <circle cx="158" cy="194" r="41.5" fill="none" stroke="#ff4a3a" stroke-width="1" opacity=".55"/><circle cx="242" cy="194" r="41.5" fill="none" stroke="#ff4a3a" stroke-width="1" opacity=".55"/>
-  <path d="M193 186 Q200 178 207 186" fill="none" stroke="#0a0508" stroke-width="8" stroke-linecap="round"/>
-  <path d="M121 188 L98 182 M279 188 L302 182" stroke="#0a0508" stroke-width="8" stroke-linecap="round"/>
-  <path d="M142 162 L156 190 L146 222 M156 190 L182 182 M156 190 L170 168" fill="none" stroke="#ffd9d0" stroke-width="1.6" opacity=".7"/>
-  <path d="M262 164 L246 192 L258 222 M246 192 L222 186 M246 192 L232 232" fill="none" stroke="#ffd9d0" stroke-width="1.6" opacity=".6"/>
+  <circle cx="158" cy="194" r="37" fill="rgba(168,216,255,.12)" stroke="#070b14" stroke-width="9"/>
+  <circle cx="242" cy="194" r="37" fill="rgba(168,216,255,.12)" stroke="#070b14" stroke-width="9"/>
+  <circle cx="158" cy="194" r="41.5" fill="none" stroke="#a8d8ff" stroke-width="1" opacity=".55"/><circle cx="242" cy="194" r="41.5" fill="none" stroke="#a8d8ff" stroke-width="1" opacity=".55"/>
+  <path d="M193 186 Q200 178 207 186" fill="none" stroke="#070b14" stroke-width="8" stroke-linecap="round"/>
+  <path d="M121 188 L98 182 M279 188 L302 182" stroke="#070b14" stroke-width="8" stroke-linecap="round"/>
+  <path d="M142 162 L156 190 L146 222 M156 190 L182 182 M156 190 L170 168" fill="none" stroke="#e8f5ff" stroke-width="1.6" opacity=".7"/>
+  <path d="M262 164 L246 192 L258 222 M246 192 L222 186 M246 192 L232 232" fill="none" stroke="#e8f5ff" stroke-width="1.6" opacity=".6"/>
   <!-- sangue escorrendo das lentes -->
-  <path d="M160 232 C158 252 163 262 160 288" fill="none" stroke="#8b0a12" stroke-width="4.5" stroke-linecap="round"/><circle cx="160" cy="292" r="3.6" fill="#8b0a12"/>
-  <path d="M236 232 C238 250 233 270 237 300" fill="none" stroke="#8b0a12" stroke-width="4" stroke-linecap="round"/><circle cx="237" cy="304" r="3.4" fill="#8b0a12"/>
+  <path d="M160 232 C158 252 163 262 160 288" fill="none" stroke="#7cc4ff" stroke-width="4.5" stroke-linecap="round"/><circle cx="160" cy="292" r="3.6" fill="#7cc4ff"/>
+  <path d="M236 232 C238 250 233 270 237 300" fill="none" stroke="#7cc4ff" stroke-width="4" stroke-linecap="round"/><circle cx="237" cy="304" r="3.4" fill="#7cc4ff"/>
 </g>
 
 <!-- névoa na base, vinheta e grão -->
