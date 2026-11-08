@@ -12,7 +12,8 @@ CORES = int(sys.argv[2]) if len(sys.argv) > 2 else 22
 
 # 1) recorte quadrado com o rosto centralizado (cabelo inteiro, ombros embaixo)
 foto = Image.open(FOTO).convert("RGBA")
-lado, cx, cy = 840, 410, 330
+lado = int(sys.argv[3]) if len(sys.argv) > 3 else 840
+cx, cy = 410, int(sys.argv[4]) if len(sys.argv) > 4 else 330
 box = (cx - lado // 2, cy - lado // 2, cx + lado // 2, cy + lado // 2)
 quadro = Image.new("RGBA", (lado, lado), (0, 0, 0, 0))
 quadro.paste(foto.crop((box[0], max(0, box[1]), box[2], box[3])), (0, max(0, -box[1])))
