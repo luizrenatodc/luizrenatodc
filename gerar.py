@@ -142,7 +142,7 @@ def painel(w, h, rotulo, titulo_linhas, corpo, css="", defs="", alt="", forca=.3
 # ---------- 1. capa ----------
 def capa():
     W, H = 1000, 560
-    foto = Image.open(SITE / "fotos/professor.webp").convert("RGBA")
+    foto = Image.open(SITE / "fotos/professor-v3.webp").convert("RGBA")
     fh = 760
     foto = foto.resize((int(foto.width * fh / foto.height), fh), Image.LANCZOS)
     # some embaixo, atrás da faixa (sem corte seco)
@@ -274,7 +274,7 @@ def contador(valor, x, y, t, cor, atraso, uid):
 def sobre(n_repos, n_commits):
     W, H = 1000, 378
     dados = [(9, "anos", "construindo sistemas de verdade", BABY), (n_repos, "", "repositórios no GitHub", LILAC),
-             (n_commits, "", "commits em 2026", AMBER), (16, "", "projetos no portfólio", MINT)]
+             (n_commits, "", "commits em 2026", AMBER), (40, "+", "projetos entregues na Carvalho Labs", MINT)]
     corpo, defs = "", ""
     largura_c = (W - 80 - 3 * 16) / 4
     for i, (v, suf, txt, cor) in enumerate(dados):
@@ -287,7 +287,7 @@ def sobre(n_repos, n_commits):
         corpo += f'<g class="cd" style="animation-delay:{.25 + i * .12}s"><rect x="{x:.1f}" y="{y}" width="{largura_c:.1f}" height="146" rx="18" fill="{INK}" fill-opacity=".62" stroke="{LINE}"/><rect class="traco" x="{x + 20:.1f}" y="{y}" width="46" height="2.5" fill="{cor}"/>{c}{extra}{linhas}</g>'
     css = f"""@keyframes rola{{from{{transform:translateY(0)}}to{{transform:translateY(var(--y))}}}}
     .rola{{animation:rola 2.2s {EASE} both}}.cd{{animation:sobe .9s {EASE} both}}"""
-    painel(W, H, "01 · Sobre", ["Da planilha que ninguém aguenta", "mais ao sistema no ar."], corpo, css, defs, ("sobre", f"9 anos construindo sistemas, {n_repos} repositórios, {n_commits} commits em 2026, 16 projetos no portfólio"))
+    painel(W, H, "01 · Sobre", ["Da planilha que ninguém aguenta", "mais ao sistema no ar."], corpo, css, defs, ("sobre", f"9 anos construindo sistemas, {n_repos} repositórios, {n_commits} commits em 2026, mais de 40 projetos entregues na Carvalho Labs"))
 
 
 # ---------- 3. trajetória ----------

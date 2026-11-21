@@ -15,14 +15,14 @@ Uno a precisão de quem vive de BI e Analytics com a entrega de quem desenvolve 
 
 <br/>
 
-<a href="https://www.luizrenato.dev/#projetos"><img src="./assets/projetos.svg" width="100%" alt="Coisas que eu construí" /></a>
+<a href="https://www.luizrenato.dev/projetos"><img src="./assets/projetos.svg" width="100%" alt="Coisas que eu construí" /></a>
 
 <br/>
 
-<a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-agentes.svg" width="49%" alt="Agentes de IA" /></a>
-<a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-sistemas.svg" width="49%" alt="Sistemas sob medida" /></a>
-<a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-sites.svg" width="49%" alt="Sites e e-commerce" /></a>
-<a href="https://www.luizrenato.dev/#projetos"><img src="./assets/proj-dados.svg" width="49%" alt="Automação e dados" /></a>
+<a href="https://www.luizrenato.dev/projetos"><img src="./assets/proj-agentes.svg" width="49%" alt="Agentes de IA" /></a>
+<a href="https://www.luizrenato.dev/projetos"><img src="./assets/proj-sistemas.svg" width="49%" alt="Sistemas sob medida" /></a>
+<a href="https://www.luizrenato.dev/projetos"><img src="./assets/proj-sites.svg" width="49%" alt="Sites e e-commerce" /></a>
+<a href="https://www.luizrenato.dev/projetos"><img src="./assets/proj-dados.svg" width="49%" alt="Automação e dados" /></a>
 
 <br/>
 
