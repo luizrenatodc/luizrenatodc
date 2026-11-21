@@ -154,18 +154,7 @@ def capa():
     foto = Image.open(SITE / "fotos/professor-v3.webp").convert("RGBA")
     fh = 760
     foto = foto.resize((int(foto.width * fh / foto.height), fh), Image.LANCZOS)
-    # some embaixo, atrás da faixa (sem corte seco)
-    a = foto.getchannel("A")
-    fade = Image.new("L", foto.size, 255)
-    px = fade.load()
-    lat = int(foto.width * .075)
-    for y in range(fh):
-        vy = 1 if y < fh * .84 else 1 - (y - fh * .84) / (fh * .16)
-        for x in range(foto.width):
-            vx = min(1, x / lat, (foto.width - 1 - x) / lat)
-            px[x, y] = int(255 * vy * (vx * vx * (3 - 2 * vx)))
-    from PIL import ImageChops
-    foto.putalpha(ImageChops.multiply(a, fade))
+    # a foto entra sólida, igual à do site (sem esmaecer nas bordas)
     ph = 500
     pw = ph * foto.width / foto.height
     px0, py0 = (W - pw) / 2, 74
@@ -225,7 +214,6 @@ def capa():
     <g class="ent" style="animation-delay:.5s"><rect x="36" y="338" width="928" height="1" fill="{SNOW}" fill-opacity=".3"/>
       <path d="M36 332 V344 M30 338 H42 M964 332 V344 M958 338 H970" stroke="{BABY}" stroke-width="1.6" fill="none"/></g>
     <g class="foto"><g class="flut"><image href="{img64(foto, 80)}" x="{px0:.1f}" y="{py0}" width="{pw:.1f}" height="{ph}"/></g></g>
-    <rect y="{H - 170}" width="{W}" height="170" fill="url(#fim)" opacity=".8"/>
     <g class="ent" style="animation-delay:.7s">{T("Hoje eu sou", INTER, 12.5, 36, 452, FOG)}{frames}
     {T("Catanduva, SP · CLT ou PJ · disponível para mudança", INTER, 12.5, 36, 510, "#aab4c8")}</g>
     <g class="ent" style="animation-delay:.85s">
