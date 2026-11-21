@@ -1,5 +1,5 @@
 # Gera todos os visuais do perfil do GitHub (SVG animado, sem JS e sem fonte externa).
-# Identidade igual à do luizrenato.dev: fundo ink, azul bebê, Syne + Inter + JetBrains Mono.
+# Identidade igual à do luizrenato.dev (visual novo): fundo ink, uma cor de destaque (azul bebê), Bricolage Grotesque + Instrument Sans + JetBrains Mono.
 import base64, collections, datetime as dt, io, json, os, random, re, urllib.request
 from pathlib import Path
 import uharfbuzz as hb
@@ -16,7 +16,10 @@ OUT.mkdir(exist_ok=True)
 random.seed(7)
 
 INK, INK2, LINE, FOG, SNOW = "#06070b", "#0c0f17", "#1c2233", "#8d97ad", "#eef2fa"
-BABY, LILAC, AMBER, MINT, PINK = "#a8d8ff", "#c9b8ff", "#ffbe5c", "#4ade80", "#ff7eb6"
+BABY = "#a8d8ff"
+# O site novo usa uma cor de destaque só: as antigas (lilás, âmbar, verde, rosa) viram azul ou branco, sem mexer nas chamadas
+LILAC, AMBER, MINT, PINK = SNOW, BABY, SNOW, BABY
+VERDE = "#4ade80"  # só o pontinho de "aberto a propostas", como no menu do site
 EASE = "cubic-bezier(.16,1,.3,1)"
 
 
@@ -43,10 +46,12 @@ class Fonte:
         return b.glyph_infos, b.glyph_positions
 
 
-SYNE = Fonte("Syne.ttf", wght=800)
-SYNE7 = Fonte("Syne.ttf", wght=700)
-INTER = Fonte("Inter.ttf", wght=400, opsz=14)
-INTER6 = Fonte("Inter.ttf", wght=600, opsz=14)
+# Os nomes SYNE/INTER ficaram para não mexer no resto do código, mas as fontes são as do site novo
+SYNE = Fonte("BricolageGrotesque.ttf", wght=800, wdth=100, opsz=96)  # nome grande
+SYNE7 = Fonte("BricolageGrotesque.ttf", wght=700, wdth=100, opsz=24)
+TIT = Fonte("BricolageGrotesque.ttf", wght=800, wdth=75, opsz=96)  # títulos de painel: caixa alta e condensada
+INTER = Fonte("InstrumentSans.ttf", wght=400, wdth=100)
+INTER6 = Fonte("InstrumentSans.ttf", wght=600, wdth=100)
 MONO = Fonte("JetBrainsMono.ttf", wght=500)
 
 
@@ -55,17 +60,17 @@ def largura(s, f, t, ls=0):
     return sum(p.x_advance for p in pos) * t / f.upem + ls * len(s)
 
 
-def curva(s, f, t, x, y, ancora="start", ls=0):
-    w = largura(s, f, t, ls)
+def curva(s, f, t, x, y, ancora="start", ls=0, sx=1):
+    w = largura(s, f, t) * sx + ls * len(s)
     x -= {"start": 0, "middle": w / 2, "end": w}[ancora]
     infos, pos = f.molda(s)
     k = t / f.upem
     partes = []
     for i, p in zip(infos, pos):
         pen = SVGPathPen(f.gs, ntos=lambda v: ("%.1f" % v).rstrip("0").rstrip("."))
-        f.gs[f.ordem[i.codepoint]].draw(TransformPen(pen, (k, 0, 0, -k, x + p.x_offset * k, y)))
+        f.gs[f.ordem[i.codepoint]].draw(TransformPen(pen, (k * sx, 0, 0, -k, x + p.x_offset * k * sx, y)))
         partes.append(pen.getCommands())
-        x += p.x_advance * k + ls
+        x += p.x_advance * k * sx + ls
     return "".join(partes)
 
 
@@ -101,7 +106,7 @@ def svg(nome, w, h, corpo, css="", titulo=""):
 
 AURORA_DEFS = "".join(
     f'<radialGradient id="a{i}"><stop offset="0" stop-color="{c}" stop-opacity="{o}"/><stop offset="1" stop-color="{c}" stop-opacity="0"/></radialGradient>'
-    for i, (c, o) in enumerate([(BABY, .55), (LILAC, .5), (AMBER, .28), (PINK, .22)]))
+    for i, (c, o) in enumerate([(BABY, .5), ("#386bc7", .45), (BABY, .22), ("#1f3f7a", .5)]))
 AURORA_CSS = """
 @keyframes d0{from{transform:translate(-60px,-30px) scale(1)}to{transform:translate(160px,50px) scale(1.25)}}
 @keyframes d1{from{transform:translate(80px,40px) scale(1.2)}to{transform:translate(-140px,-40px) scale(.9)}}
@@ -118,16 +123,20 @@ def aurora(w, h, forca=1.0):
 
 
 def painel(w, h, rotulo, titulo_linhas, corpo, css="", defs="", alt="", forca=.35):
-    """Painel escuro padrão: rótulo mono + título Syne, como as seções do site."""
-    y = 92
+    """Painel escuro padrão, como as seções do site novo: número, régua, nome da seção e título em caixa alta."""
+    num, nome = [q.strip() for q in rotulo.split("·")]
+    y = 108
     t = ""
     for i, ln in enumerate(titulo_linhas):
-        t += f'<g class="tt" style="animation-delay:{.1 + i * .08}s">{T(ln, SYNE, 34, 40, y + i * 42)}</g>'
+        t += f'<g class="tt" style="animation-delay:{.1 + i * .08}s">{T(ln.upper(), TIT, 50, 40, y + i * 46)}</g>'
+    x1 = 40 + largura(num, MONO, 12.5) + 16
+    x2 = w - 40 - largura(nome, INTER, 13) - 16
+    cab = f'{T(num, MONO, 12.5, 40, 54, BABY)}<rect x="{x1:.0f}" y="49.5" width="{x2 - x1:.0f}" height="1" fill="#fff" fill-opacity=".2"/>{T(nome, INTER, 13, w - 40, 54, FOG, "end")}'
     c = f"""<defs>{AURORA_DEFS}<clipPath id="pc"><rect width="{w}" height="{h}" rx="24"/></clipPath>
     <pattern id="gr" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#fff" stroke-opacity=".03"/></pattern>
-    <linearGradient id="ln" x1="0" x2="1"><stop offset="0" stop-color="{BABY}"/><stop offset=".55" stop-color="{LILAC}"/><stop offset="1" stop-color="{AMBER}"/></linearGradient>{defs}</defs>
+    <linearGradient id="ln" x1="0" x2="1"><stop offset="0" stop-color="{BABY}"/><stop offset="1" stop-color="{BABY}" stop-opacity=".25"/></linearGradient>{defs}</defs>
     <g clip-path="url(#pc)"><rect width="{w}" height="{h}" fill="{INK2}"/>{aurora(w, h, forca)}<rect width="{w}" height="{h}" fill="url(#gr)"/>
-    {T(rotulo.upper(), MONO, 12.5, 40, 52, BABY, ls=3.4)}{t}{corpo}</g>
+    {cab}{t}{corpo}</g>
     <rect x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="24" fill="none" stroke="{LINE}"/>
     <rect class="brilho" x=".5" y=".5" width="{w - 1}" height="{h - 1}" rx="24" fill="none" stroke="url(#ln)" stroke-width="1.5" pathLength="1000"/>"""
     base = f"""{AURORA_CSS}
@@ -161,9 +170,16 @@ def capa():
     pw = ph * foto.width / foto.height
     px0, py0 = (W - pw) / 2, 74
 
-    t_luiz = 700 / largura("LUIZ", SYNE, 1)
-    t_ren = 948 / largura("RENATO", SYNE, 1)
-    d_ren = curva("RENATO", SYNE, t_ren, 500, 302, "middle")
+    cap = SYNE.tt["OS/2"].sCapHeight / SYNE.upem
+    t_luiz = 126 / cap  # altura de letra que cabe na faixa do nome
+    sx_luiz = 640 / largura("LUIZ", SYNE, t_luiz)  # e o nome é esticado na horizontal, como no site
+    t_ren = 92 / cap
+    sx_ren = 900 / largura("RENATO", SYNE, t_ren)
+    d_luiz = curva("LUIZ", SYNE, t_luiz, 500, 198, "middle", 0, sx_luiz)
+    d_ren = curva("RENATO", SYNE, t_ren, 500, 302, "middle", 0, sx_ren)
+
+    bw = largura("Vamos conversar", SYNE7, 16) + 26 + 18 + 40 + 14  # texto + margens + círculo da seta
+    bx = 964 - bw
 
     # papéis com o efeito de embaralhar do site
     papeis = ["Engenheiro de Software", "Analista de Dados", "Especialista em IA", "Desenvolvedor Full Stack", "Automação de Processos"]
@@ -176,23 +192,14 @@ def capa():
         for k in range(Q):
             n = int(len(p) * k / Q)
             s = p[:n] + "".join(c if c == " " else random.choice(lixo) for c in p[n:])
-            frames += f'<path class="fr" d="{curva(s, SYNE7, tam, 36, 456)}" fill="{BABY}" style="animation-delay:{t0 - ciclo:.2f}s"/>'
+            frames += f'<path class="fr" d="{curva(s, SYNE7, tam, 36, 484)}" fill="{BABY}" style="animation-delay:{t0 - ciclo:.2f}s"/>'
             t0 += PASSO
-        frames += f'<path class="fi" d="{curva(p, SYNE7, tam, 36, 456)}" fill="{BABY}" style="animation-delay:{t0 - ciclo:.2f}s"/>'
+        frames += f'<path class="fi" d="{curva(p, SYNE7, tam, 36, 484)}" fill="{BABY}" style="animation-delay:{t0 - ciclo:.2f}s"/>'
         t0 += FICA
     pf, pi = PASSO / ciclo * 100, FICA / ciclo * 100
 
-    itens = ["Software", "Dados", "IA", "Automação", "BI", "Full Stack", "Analytics", "Agentes", "Next.js", "Power BI"]
-    x, faixa = 0.0, ""
-    for it in itens:
-        faixa += T(it.upper(), SYNE, 21, x, 30, INK)
-        x += largura(it.upper(), SYNE, 21) + 20
-        faixa += f'<circle cx="{x:.0f}" cy="23" r="4" fill="{INK}"/>'
-        x += 24
-    unidade = x
-
     faiscas = "".join(
-        f'<circle class="fa" cx="{random.randint(20, 980)}" cy="{random.randint(90, 500)}" r="{random.choice([1, 1.2, 1.6])}" fill="{random.choice([BABY, LILAC, AMBER, SNOW])}" style="animation-delay:-{random.uniform(0, 7):.1f}s;animation-duration:{random.uniform(5, 9):.1f}s"/>'
+        f'<circle class="fa" cx="{random.randint(20, 980)}" cy="{random.randint(90, 500)}" r="{random.choice([1, 1.2, 1.6])}" fill="{random.choice([BABY, SNOW])}" style="animation-delay:-{random.uniform(0, 7):.1f}s;animation-duration:{random.uniform(5, 9):.1f}s"/>'
         for _ in range(26))
 
     corpo = f"""<defs>{AURORA_DEFS}
@@ -210,24 +217,24 @@ def capa():
     {T("LUIZRENATO", SYNE, 15, 36, 40, SNOW)}{T(".DEV", MONO, 12, 36 + largura("LUIZRENATO", SYNE, 15) + 3, 40, FOG, ls=1)}
     {T("ENGENHARIA · DADOS · IA", MONO, 11.5, 964, 40, FOG, "end", 3)}
     <g class="ent" style="animation-delay:.1s">{T("DISPONÍVEL PARA NOVOS DESAFIOS", MONO, 10.5, 500, 58, FOG, "middle", 4)}</g>
-    <g clip-path="url(#c1)"><g class="rev" style="animation-delay:.15s">{T("LUIZ", SYNE, t_luiz, 500, 198, SNOW, "middle")}</g></g>
+    <g clip-path="url(#c1)"><g class="rev" style="animation-delay:.15s"><path d="{d_luiz}" fill="{SNOW}"/></g></g>
     <g clip-path="url(#c2)"><g class="rev" style="animation-delay:.28s">
       <path d="{d_ren}" fill="none" stroke="{SNOW}" stroke-opacity=".38" stroke-width="1.1"/>
       <path class="corre" d="{d_ren}" fill="none" stroke="{BABY}" stroke-width="1.8" pathLength="1000"/>
     </g></g>
+    <g class="ent" style="animation-delay:.5s"><rect x="36" y="338" width="928" height="1" fill="{SNOW}" fill-opacity=".3"/>
+      <path d="M36 332 V344 M30 338 H42 M964 332 V344 M958 338 H970" stroke="{BABY}" stroke-width="1.6" fill="none"/></g>
     <g class="foto"><g class="flut"><image href="{img64(foto, 80)}" x="{px0:.1f}" y="{py0}" width="{pw:.1f}" height="{ph}"/></g></g>
     <rect y="{H - 170}" width="{W}" height="170" fill="url(#fim)" opacity=".8"/>
-    <g class="ent" style="animation-delay:.7s">{T("HOJE EU SOU", MONO, 11, 36, 426, FOG, ls=3.2)}{frames}
-    {T("Catanduva, SP · CLT ou PJ · disponível para mudança", INTER, 12.5, 36, 482, "#aab4c8")}</g>
+    <g class="ent" style="animation-delay:.7s">{T("Hoje eu sou", INTER, 12.5, 36, 452, FOG)}{frames}
+    {T("Catanduva, SP · CLT ou PJ · disponível para mudança", INTER, 12.5, 36, 510, "#aab4c8")}</g>
     <g class="ent" style="animation-delay:.85s">
-      <rect x="770" y="424" width="194" height="50" rx="25" fill="{INK}" fill-opacity=".6" stroke="#fff" stroke-opacity=".28"/>
-      {T("Vamos conversar →", SYNE7, 15.5, 867, 454, SNOW, "middle")}
-      <circle cx="790" cy="400" r="4" fill="{MINT}"/><circle class="ping" cx="790" cy="400" r="4" fill="{MINT}"/>
-      {T("ABERTO A PROPOSTAS", MONO, 10.5, 804, 404, MINT, ls=2.4)}
-    </g>
-    <g transform="rotate(-1.5 500 520)">
-      <rect x="-30" y="504" width="1060" height="44" fill="{BABY}"/>
-      <g transform="translate(0 503)"><g class="corrida">{"".join(f'<g transform="translate({i * unidade:.1f} 0)">{faixa}</g>' for i in range(3))}</g></g>
+      <rect x="{bx:.0f}" y="452" width="{bw:.0f}" height="52" rx="26" fill="{BABY}"/>
+      {T("Vamos conversar", SYNE7, 16, bx + 26, 484, INK)}
+      <circle cx="{bx + bw - 26:.0f}" cy="478" r="20" fill="{INK}"/>
+      <path d="M{bx + bw - 33:.0f} 485 L{bx + bw - 19:.0f} 471 M{bx + bw - 28:.0f} 471 H{bx + bw - 19:.0f} V480" fill="none" stroke="{BABY}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="{bx + 22:.0f}" cy="428" r="4" fill="{VERDE}"/><circle class="ping" cx="{bx + 22:.0f}" cy="428" r="4" fill="{VERDE}"/>
+      {T("ABERTO A PROPOSTAS", MONO, 10.5, bx + 36, 432, FOG, ls=2.4)}
     </g>
     </g>
     <rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="24" fill="none" stroke="{LINE}"/>"""
@@ -237,7 +244,6 @@ def capa():
     @keyframes foto{{from{{opacity:0;transform:translateY(46px)}}to{{opacity:1;transform:none}}}}
     @keyframes flut{{from{{transform:translateY(-3px)}}to{{transform:translateY(5px)}}}}
     @keyframes run{{to{{stroke-dashoffset:-1000}}}}
-    @keyframes corrida{{to{{transform:translateX(-{unidade:.1f}px)}}}}
     @keyframes ping{{from{{transform:scale(1);opacity:.8}}to{{transform:scale(3.4);opacity:0}}}}
     @keyframes tw{{0%,100%{{opacity:0}}50%{{opacity:.9}}}}
     @keyframes fr{{0%{{opacity:1}}{pf:.3f}%{{opacity:0}}100%{{opacity:0}}}}
@@ -245,7 +251,6 @@ def capa():
     .rev{{animation:rev 1.1s {EASE} both}}.ent{{animation:ent .9s {EASE} both}}
     .foto{{animation:foto 1.2s {EASE} .3s both}}.flut{{animation:flut 5s ease-in-out infinite alternate}}
     .corre{{stroke-dasharray:70 930;animation:run 11s linear infinite}}
-    .corrida{{animation:corrida 22s linear infinite}}
     .ping{{transform-box:fill-box;transform-origin:center;animation:ping 1.8s ease-out infinite}}
     .fa{{opacity:0;animation:tw 6s ease-in-out infinite}}
     .fr,.fi{{opacity:0;animation-duration:{ciclo:.2f}s;animation-timing-function:step-end;animation-iteration-count:infinite}}
@@ -370,7 +375,7 @@ def projeto(nome, titulo, categoria, texto, telas, cor):
     corpo = f"""<defs><clipPath id="c"><rect width="{W}" height="{H}" rx="20"/></clipPath></defs>
     <g clip-path="url(#c)"><rect width="{W}" height="{H}" fill="{INK2}"/>
     <rect width="{W}" height="36" fill="{INK}"/>
-    <circle cx="20" cy="18" r="5" fill="{PINK}"/><circle cx="37" cy="18" r="5" fill="{AMBER}"/><circle cx="54" cy="18" r="5" fill="{MINT}"/>
+    <circle cx="20" cy="18" r="5" fill="#ff6b6b"/><circle cx="37" cy="18" r="5" fill="#ffbe5c"/><circle cx="54" cy="18" r="5" fill="#4ade80"/>
     {T(categoria.upper(), MONO, 10.5, 74, 22, FOG, ls=2.4)}{pontos}{imgs}
     <rect y="348.5" width="{W}" height="82" fill="{INK2}"/><rect y="348.5" width="{W}" height="1" fill="{LINE}"/>
     {T(titulo, SYNE7, 20, 20, 378, SNOW)}{T(texto, INTER, 14, 20, 404, "#aab4c8")}</g>
@@ -404,26 +409,31 @@ def stack():
         d = "data:image/svg+xml;base64," + base64.b64encode(f.read_bytes()).decode()
         x = 40 + i * (tam + gap)
         corpo += f'<g class="ic" style="animation-delay:{.2 + i * .06:.2f}s"><g class="on" style="animation-delay:{-i * .28:.2f}s"><image href="{d}" x="{x:.1f}" y="130" width="{tam}" height="{tam}"/></g></g>'
-    grupos = [("Desenvolvimento", ["TypeScript", "JavaScript", "React", "Next.js", "Node.js", "PHP", "Laravel", "Vue.js", "Tailwind CSS"], BABY, 1),
-              ("Dados & BI", ["Power BI", "DAX", "SQL", "Python", "PostgreSQL", "Prisma", "Excel avançado", "VBA", "Analytics"], LILAC, -1),
-              ("IA & Automação", ["Agentes de IA", "LLMs", "WhatsApp Business API", "Automação de processos", "Integrações e APIs", "Instagram/Meta API"], MINT, 1),
-              ("Low-code & ERP", ["AppSheet", "Power Apps", "TOTVS", "Datasul", "Fluig", "PIMS"], AMBER, -1)]
+    grupos = [("Desenvolvimento", ["TypeScript", "JavaScript", "React", "Next.js", "Node.js", "PHP", "Laravel", "Vue.js", "Tailwind CSS"], BABY),
+              ("Dados & BI", ["Power BI", "DAX", "SQL", "Python", "PostgreSQL", "Prisma", "Excel avançado", "VBA", "Analytics"], SNOW),
+              ("IA & Automação", ["Agentes de IA", "LLMs", "WhatsApp Business API", "Automação de processos", "Integrações e APIs", "Instagram/Meta API"], BABY),
+              ("Low-code & ERP", ["AppSheet", "Power Apps", "TOTVS", "Datasul", "Fluig", "PIMS"], SNOW)]
     css = ""
-    for g, (nome, itens, cor, sent) in enumerate(grupos):
-        y = 206 + g * 64
-        x, tira = 0.0, ""
+    y = 222
+    n = 0
+    for nome, itens, cor in grupos:
+        corpo += T(nome, INTER, 13, 40, y, FOG)
+        y += 14
+        x = 40
         for it in itens:
             w = largura(it, INTER6, 14) + 32
-            tira += f'<rect x="{x:.1f}" y="0" width="{w:.1f}" height="38" rx="19" fill="{INK}" fill-opacity=".7" stroke="{cor}" stroke-opacity=".38"/>{T(it, INTER6, 14, x + 16, 24.5, SNOW)}'
+            if x + w > W - 40:
+                x = 40
+                y += 46
+            corpo += f'<g class="chip" style="animation-delay:{.3 + n * .04:.2f}s"><rect x="{x:.1f}" y="{y}" width="{w:.1f}" height="38" rx="19" fill="{INK}" fill-opacity=".7" stroke="{cor}" stroke-opacity=".45"/>{T(it, INTER6, 14, x + 16, y + 24.5, SNOW)}</g>'
             x += w + 10
-        rep = int(760 / x) + 2
-        tiras = "".join(f'<g transform="translate({i * x:.1f} 0)">{tira}</g>' for i in range(rep))
-        css += f"@keyframes m{g}{{from{{transform:translateX({0 if sent > 0 else -x:.1f}px)}}to{{transform:translateX({-x if sent > 0 else 0:.1f}px)}}}}.m{g}{{animation:m{g} {x / 26:.0f}s linear infinite}}"
-        corpo += f'{T(nome.upper(), MONO, 10.5, 40, y + 23, cor, ls=1.6)}<g clip-path="url(#k)" transform="translate(0 {y})"><g transform="translate(190 0)"><g class="m{g}">{tiras}</g></g></g>'
-    defs = f'<clipPath id="k"><rect x="190" y="-2" width="770" height="44"/></clipPath>'
+            n += 1
+        y += 64
+    H = int(y - 8)
+    defs = ""
     css += f"""@keyframes pop{{from{{opacity:0;transform:scale(.4)}}to{{opacity:1;transform:none}}}}
     @keyframes onda{{0%,100%{{transform:translateY(0)}}50%{{transform:translateY(-7px)}}}}
-    .ic{{transform-box:fill-box;transform-origin:center;animation:pop .7s {EASE} both}}.on{{animation:onda 4.2s ease-in-out infinite}}"""
+    .ic{{transform-box:fill-box;transform-origin:center;animation:pop .7s {EASE} both}}.on{{animation:onda 4.2s ease-in-out infinite}}.chip{{animation:sobe .7s {EASE} both}}"""
     painel(W, H, "02 · Stack", ["Ferramentas do dia a dia."], corpo, css, defs, ("stack", "TypeScript, React, Next.js, Node.js, PHP, Laravel, Vue, Tailwind, Python, PostgreSQL, Prisma, Vercel, Git, Power BI, SQL, agentes de IA e automação"), forca=.25)
 
 
@@ -580,12 +590,12 @@ def commits():
 # ---------- 8. contato ----------
 def contato():
     W, H = 1000, 300
-    corpo = f"""<g class="tt">{T("Vamos construir", SYNE, 46, 500, 110, SNOW, "middle")}</g>
-    <g class="tt" style="animation-delay:.1s"><path d="{curva("algo juntos?", SYNE, 46, 500, 166, "middle")}" fill="none" stroke="{BABY}" stroke-width="1.3"/></g>
+    corpo = f"""<g class="tt">{T("VAMOS CONSTRUIR", TIT, 72, 500, 120, SNOW, "middle")}</g>
+    <g class="tt" style="animation-delay:.1s"><path d="{curva("ALGO JUNTOS?", TIT, 72, 500, 184, "middle")}" fill="none" stroke="{BABY}" stroke-width="1.3"/></g>
     <g class="tt" style="animation-delay:.25s">{T("Busco um time onde eu possa somar com engenharia, dados e IA.", INTER, 16, 500, 214, "#c5cede", "middle")}</g>
     <g class="tt" style="animation-delay:.35s">{T("CLT · PJ · REMOTO · HÍBRIDO · PRESENCIAL", MONO, 12, 500, 252, BABY, "middle", 3)}</g>"""
     c = f"""<defs>{AURORA_DEFS}<clipPath id="pc"><rect width="{W}" height="{H}" rx="24"/></clipPath>
-    <linearGradient id="ln" x1="0" x2="1"><stop offset="0" stop-color="{BABY}"/><stop offset=".55" stop-color="{LILAC}"/><stop offset="1" stop-color="{AMBER}"/></linearGradient></defs>
+    <linearGradient id="ln" x1="0" x2="1"><stop offset="0" stop-color="{BABY}"/><stop offset="1" stop-color="{BABY}" stop-opacity=".25"/></linearGradient></defs>
     <g clip-path="url(#pc)"><rect width="{W}" height="{H}" fill="{INK}"/>{aurora(W, H, .7)}{corpo}</g>
     <rect x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="24" fill="none" stroke="{LINE}"/>
     <rect class="brilho" x=".5" y=".5" width="{W - 1}" height="{H - 1}" rx="24" fill="none" stroke="url(#ln)" stroke-width="1.5" pathLength="1000"/>"""
